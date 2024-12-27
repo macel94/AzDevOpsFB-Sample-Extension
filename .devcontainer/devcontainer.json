@@ -8,14 +8,13 @@
 	// "features": {},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [
-		5173,
-		443
+		5173
 	],
-	// "portsAttributes": {
-	// 	"443": {
-	// 		"protocol": "https"
-	// 	}
-	// },
+	"portsAttributes": {
+		"5173": {
+			"protocol": "https"
+		}
+	},
 	// Use 'postCreateCommand' to run commands after the container is created.
 	"postCreateCommand": "yarn install"
 	// Configure tool-specific properties.
