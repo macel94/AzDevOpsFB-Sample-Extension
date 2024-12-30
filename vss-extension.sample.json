@@ -1,0 +1,56 @@
+{
+    "manifestVersion": 1,
+    "id": "azure-devops-extension-tsx",
+    "version": "1.0.0",
+    "name": "Azure DevOps React extension",
+    "description": "Develop Azure DevOps Extension using Typescript and React",
+    "publisher": "ExamplePublisher",
+    "categories": [
+        "Azure Repos"
+    ],
+    "targets": [
+        {
+            "id": "Microsoft.VisualStudio.Services"
+        }
+    ],
+    "content": {
+        "details": {
+            "path": "overview.md"
+        }
+    },
+    "files": [
+        {
+            "path": "dist",
+            "addressable": true
+        }
+    ],
+    "contributions": [
+        {
+            "id": "hello-world-hub-group-tsx",
+            "type": "ms.vss-web.hub-group",
+            "description": "Sample hub group with tsx",
+            "targets": [
+                "ms.vss-web.project-hub-groups-collection"
+            ],
+            "properties": {
+                "name": "Hello World! from TSX"
+            }
+        },
+        {
+            "id": "default-hub",
+            "type": "ms.vss-web.hub",
+            "targets": [
+                ".hello-world-hub-group-tsx"
+            ],
+            "properties": {
+                "uri": "dist/index.html"
+            }
+        }
+    ],
+    "scopes": [
+        "vso.project_manage",
+        "vso.code",
+        "vso.graph",
+        "vso.work"
+    ]
+}

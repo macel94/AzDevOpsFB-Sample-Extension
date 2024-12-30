@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+*.vsix
+vss-extension.json
+vss-extension.dev.json

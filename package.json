@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "tsc -b && vite build",
     "lint": "eslint .",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "publish-extension": "tsc -b && vite build && tfx extension create --manifest-globs vss-extension.json --rev-version",
+    "publish-extension-dev": "tfx extension create --manifest-globs vss-extension.dev.json --rev-version"
   },
   "dependencies": {
     "azure-devops-extension-api": "^4.246.0",
