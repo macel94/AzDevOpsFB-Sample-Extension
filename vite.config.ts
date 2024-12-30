@@ -9,4 +9,8 @@ export default defineConfig({
     react(),
     basicSsl()
   ],
+  server: {
+		https: true, // same as "--https" flag
+		host: true, // same as "--host" flag
+	}
 })
