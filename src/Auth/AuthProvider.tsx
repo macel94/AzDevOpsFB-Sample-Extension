@@ -9,7 +9,6 @@ export interface UserContext {
 
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<SDK.IUserContext | null>(null);
-  console.log('Starting AuthProvider...');
 
   useEffect(() => {
     const init = async () => {
