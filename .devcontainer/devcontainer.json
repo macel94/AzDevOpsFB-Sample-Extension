@@ -19,7 +19,11 @@
 			"protocol": "https"
 		}
 	},
-	"postCreateCommand": "yarn install && bash -c 'yarn global add tfx-cli'"
+	"mounts": [
+		"type=bind,source=/usr/local/share/ca-certificates,target=/usr/local/share/ca-certificates"
+	],
+	// trust the node_modules/.vite/basic-ssl/_cert.pem certificate
+	"postCreateCommand": "yarn install && bash -c 'yarn global add tfx-cli' && sudo cp node_modules/.vite/basic-ssl/_cert.pem /usr/local/share/ca-certificates/_cert.crt && sudo update-ca-certificates"
 	// Configure tool-specific properties.
 	// "customizations": {},
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
