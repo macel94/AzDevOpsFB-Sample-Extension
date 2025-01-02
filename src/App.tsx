@@ -1,18 +1,12 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from './Auth/AuthContext';
-// import * as SDK from 'azure-devops-extension-sdk';
-// import * as WitAPI from "azure-devops-extension-api/WorkItemTracking";
-// import * as API from "azure-devops-extension-api";
-
-interface Environment {
-  id: string;
-  name: string;
-}
-
-interface Solution {
-  id: string;
-  name: string;
-}
+// import getClient from 'azure-devops-extension-api';
+// import WorkItemTrackingRestClient from 'azure-devops-extension-api/WorkItemTracking';
+// import Wiql from 'azure-devops-extension-api/WorkItemTracking';
+// https://www.linkedin.com/pulse/build-azure-devops-extension-using-react-typescript-riccardo-gregori
+import { JsonPatchDocument } from './JsonPatchDocument';
+import { Solution } from './Solution';
+import { Environment } from './Environment';
 
 const App: React.FC = () => {
   const { user, isLoggedIn } = useContext(AuthContext);
@@ -21,14 +15,12 @@ const App: React.FC = () => {
   const [selectedSolutions, setSelectedSolutions] = useState<Solution[]>([]);
 
   const environments: Environment[] = [
-    // Replace with your actual environments
     { id: 'env1', name: 'Development' },
     { id: 'env2', name: 'Staging' },
     { id: 'env3', name: 'Production' },
   ];
 
   const solutions: Solution[] = [
-    // Replace with your actual solutions
     { id: 'sol1', name: 'Solution A' },
     { id: 'sol2', name: 'Solution B' },
     { id: 'sol3', name: 'Solution C' },
@@ -51,35 +43,41 @@ const App: React.FC = () => {
     }
 
     try {
-      // // Get the WorkItemTrackingRestClient
-      // const client = await API.getClient<WitAPI.WorkItemTrackingRestClient>(WitAPI.WorkItemTrackingRestClient); 
+      // // Initialize the Azure DevOps SDK
+      // await SDK.init();
 
-      // const projectService = await SDK.getService<API.IProjectPageService>(API.CommonServiceIds.ProjectPageService);
-      // const project = await projectService.getProject();
+      // const wiql: Wiql = { query: "SELECT [System.Id], FROM WorkItems WHERE [Work Item Type] = 'Bug'" };
 
-      // // Construct the JSON payload for the Azure DevOps task
-      // const taskPayload = {
-      //   sourceEnvironment: sourceEnv.id,
-      //   targetEnvironment: targetEnv.id,
-      //   solutions: selectedSolutions.map(s => s.id),
-      // };
+      // // Get the WorkItemTracking client
+      // const workItemClient = getClient(WorkItemTrackingRestClient);
+      // const result = await workItemClient.queryByWiql(wiql);
 
-      // // Create the work item
-      // const workItem = await client.createWorkItem(
-      //   [
-      //     { op: "add", path: "/fields/System.Title", value: "Deployment Request" },
-      //     { op: "add", path: "/fields/System.Description", value: JSON.stringify(taskPayload, null, 2) }
-      //   ],
-      //   project!.name,
-      //   "Task"
+      // Prepare the work item fields as a JSON Patch Document
+      const patchDocument: JsonPatchDocument = [
+        {
+          op: 'add',
+          path: '/fields/System.Title',
+          value: `Deployment from ${sourceEnv.name} to ${targetEnv.name}`,
+        },
+        {
+          op: 'add',
+          path: '/fields/System.Description',
+          value: `Deploying the following solutions: ${selectedSolutions.map(s => s.name).join(', ')}`,
+        },
+      ];
+
+      // Specify the project name and work item type
+      const projectName = 'YourProjectName'; // Replace with your Azure DevOps project name
+      const workItemType = 'Task'; // Replace with the desired work item type
+
+      // Create the work item
+      // const createdWorkItem = await workItemClient.createWorkItem(
+      //   JSON.stringify(patchDocument), // Serialize the JSON Patch Document
+      //   projectName,
+      //   workItemType
       // );
 
-      // console.log("Work item created:", workItem.id);
-      // alert('Deployment request submitted!');
-
-      // // Open the created work item in a new tab
-      // const workItemUrl = `${project!.name}/_workitems/edit/${workItem.id}`;
-      // window.open(workItemUrl, "_blank");
+      // alert(`Work item created successfully with ID: ${createdWorkItem.id}`);
     } catch (error) {
       console.error('Error creating work item:', error);
       alert('Failed to submit deployment request.');
@@ -112,7 +110,6 @@ const App: React.FC = () => {
             </select>
           </div>
 
-          {/* Target Environment Selection */}
           <div>
             <label htmlFor="targetEnv">Target Environment:</label>
             <select
@@ -133,7 +130,6 @@ const App: React.FC = () => {
             </select>
           </div>
 
-          {/* Solution Selection */}
           <div>
             <label htmlFor="solutions">Solutions:</label>
             <ul>
@@ -155,7 +151,6 @@ const App: React.FC = () => {
             </ul>
           </div>
 
-          {/* Selected Solutions Display */}
           <div>
             <h3>Selected Solutions:</h3>
             <ul>
@@ -165,7 +160,6 @@ const App: React.FC = () => {
             </ul>
           </div>
 
-          {/* Submit Button */}
           <button onClick={handleSubmit} disabled={!sourceEnv || !targetEnv || selectedSolutions.length === 0}>
             Submit
           </button>
