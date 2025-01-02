@@ -1,7 +1,7 @@
 import React, { useState, useContext } from 'react';
-import * as SDK from 'azure-devops-extension-sdk';
 import { AuthContext } from './Auth/AuthContext';
-import { WorkItemTrackingRestClient } from "azure-devops-extension-api/WorkItemTracking";
+import * as SDK from 'azure-devops-extension-sdk';
+// import * as WitAPI from "azure-devops-extension-api/WorkItemTracking";
 import * as API from "azure-devops-extension-api";
 
 interface Environment {
@@ -51,35 +51,35 @@ const App: React.FC = () => {
     }
 
     try {
-      // Get the WorkItemTrackingRestClient
-      const client = await API.getClient<WorkItemTrackingRestClient>(WorkItemTrackingRestClient);
+      // // Get the WorkItemTrackingRestClient
+      // const client = await API.getClient<WitAPI.WorkItemTrackingRestClient>(WitAPI.WorkItemTrackingRestClient); 
 
-      const projectService = await SDK.getService<API.IProjectPageService>(API.CommonServiceIds.ProjectPageService);
-      const project = await projectService.getProject();
+      // const projectService = await SDK.getService<API.IProjectPageService>(API.CommonServiceIds.ProjectPageService);
+      // const project = await projectService.getProject();
 
-      // Construct the JSON payload for the Azure DevOps task
-      const taskPayload = {
-        sourceEnvironment: sourceEnv.id,
-        targetEnvironment: targetEnv.id,
-        solutions: selectedSolutions.map(s => s.id),
-      };
+      // // Construct the JSON payload for the Azure DevOps task
+      // const taskPayload = {
+      //   sourceEnvironment: sourceEnv.id,
+      //   targetEnvironment: targetEnv.id,
+      //   solutions: selectedSolutions.map(s => s.id),
+      // };
 
-      // Create the work item
-      const workItem = await client.createWorkItem(
-        [
-          { op: "add", path: "/fields/System.Title", value: "Deployment Request" },
-          { op: "add", path: "/fields/System.Description", value: JSON.stringify(taskPayload, null, 2) }
-        ],
-        project!.name,
-        "Task"
-      );
+      // // Create the work item
+      // const workItem = await client.createWorkItem(
+      //   [
+      //     { op: "add", path: "/fields/System.Title", value: "Deployment Request" },
+      //     { op: "add", path: "/fields/System.Description", value: JSON.stringify(taskPayload, null, 2) }
+      //   ],
+      //   project!.name,
+      //   "Task"
+      // );
 
-      console.log("Work item created:", workItem.id);
-      alert('Deployment request submitted!');
+      // console.log("Work item created:", workItem.id);
+      // alert('Deployment request submitted!');
 
-      // Open the created work item in a new tab
-      const workItemUrl = `${project!.name}/_workitems/edit/${workItem.id}`;
-      window.open(workItemUrl, "_blank");
+      // // Open the created work item in a new tab
+      // const workItemUrl = `${project!.name}/_workitems/edit/${workItem.id}`;
+      // window.open(workItemUrl, "_blank");
     } catch (error) {
       console.error('Error creating work item:', error);
       alert('Failed to submit deployment request.');
