@@ -8,7 +8,7 @@
     "build": "tsc -b && vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "publish-extension": "tsc -b && vite build && tfx extension create --manifest-globs vss-extension.json --rev-version",
+    "publish-extension": "bash ./publish-extension.sh",
     "publish-extension-dev": "tfx extension create --manifest-globs vss-extension.dev.json --rev-version"
   },
   "dependencies": {
