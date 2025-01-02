@@ -1,8 +1,8 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from './Auth/AuthContext';
-import * as SDK from 'azure-devops-extension-sdk';
+// import * as SDK from 'azure-devops-extension-sdk';
 // import * as WitAPI from "azure-devops-extension-api/WorkItemTracking";
-import * as API from "azure-devops-extension-api";
+// import * as API from "azure-devops-extension-api";
 
 interface Environment {
   id: string;
