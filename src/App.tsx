@@ -1,12 +1,68 @@
 import React, { useState, useContext } from 'react';
 import { AuthContext } from './Auth/AuthContext';
-// import getClient from 'azure-devops-extension-api';
-// import WorkItemTrackingRestClient from 'azure-devops-extension-api/WorkItemTracking';
-// import Wiql from 'azure-devops-extension-api/WorkItemTracking';
-// https://www.linkedin.com/pulse/build-azure-devops-extension-using-react-typescript-riccardo-gregori
-import { JsonPatchDocument } from './JsonPatchDocument';
+// import { JsonPatchDocument } from './JsonPatchDocument';
 import { Solution } from './Solution';
 import { Environment } from './Environment';
+// import { getService } from 'azure-devops-extension-sdk';
+
+import { WorkItemsApi, WorkItemsCreateRequest } from './wit-client/apis/WorkItemsApi';
+import { JsonPatchDocument } from './wit-client/models/JsonPatchDocument';
+import { WorkItem } from './wit-client/models/WorkItem';
+import { getHost } from 'azure-devops-extension-sdk';
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+const createWorkItem = async (workItem: any): Promise<WorkItem> => {
+  const client = new WorkItemsApi();
+  const project = await getProject();
+  const organization = getHost().name;
+
+  const patchDocument: JsonPatchDocument = [
+    {
+      op: 'add',
+      path: '/fields/System.Title',
+      value: workItem.fields['System.Title'],
+    },
+    {
+      op: 'add',
+      path: '/fields/Custom.Solutions',
+      value: workItem.fields['Custom.Solutions'],
+    },
+    {
+      op: 'add',
+      path: '/fields/Custom.SourceEnvironment',
+      value: workItem.fields['Custom.SourceEnvironment'],
+    },
+    {
+      op: 'add',
+      path: '/fields/Custom.TargetEnvironment',
+      value: workItem.fields['Custom.TargetEnvironment'],
+    },
+  ];
+
+  const request: WorkItemsCreateRequest = {
+    organization: organization,
+    project: project,
+    type: 'Task',
+    apiVersion: '7.2-preview',
+    body: patchDocument,
+  };
+
+  return await client.workItemsCreate(request);
+};
+
+const getProject = (): string => {
+  // Get the project name from the ID. the call is https://dev.azure.com/{organization}/_apis/projects/{projectId}?api-version=7.1
+  // var projId = getHost().id;
+  // fecth the proj name using organization and projId
+  // var project = fetch(`https://dev.azure.com/${getHost().name}/_apis/projects/${projId}?api-version=7.1`)
+  
+  if (!project) {
+    // take it from a mocked environment variable
+    return process.env.REACT_APP_AZURE_DEVOPS_PROJECT || 'REACT_APP_AZURE_DEVOPS_PROJECT env variable not set';
+  }
+
+  return project;
+};
 
 const App: React.FC = () => {
   const { user, isLoggedIn } = useContext(AuthContext);
@@ -43,41 +99,18 @@ const App: React.FC = () => {
     }
 
     try {
-      // // Initialize the Azure DevOps SDK
-      // await SDK.init();
-
-      // const wiql: Wiql = { query: "SELECT [System.Id], FROM WorkItems WHERE [Work Item Type] = 'Bug'" };
-
-      // // Get the WorkItemTracking client
-      // const workItemClient = getClient(WorkItemTrackingRestClient);
-      // const result = await workItemClient.queryByWiql(wiql);
-
-      // Prepare the work item fields as a JSON Patch Document
-      const patchDocument: JsonPatchDocument = [
-        {
-          op: 'add',
-          path: '/fields/System.Title',
-          value: `Deployment from ${sourceEnv.name} to ${targetEnv.name}`,
+      const workItem = {
+        fields: {
+          'System.Title': `Deployment Request from ${sourceEnv.name} to ${targetEnv.name}`,
+          'Custom.Solutions': selectedSolutions.map(s => s.name).join(', '),
+          'Custom.SourceEnvironment': sourceEnv.name,
+          'Custom.TargetEnvironment': targetEnv.name,
         },
-        {
-          op: 'add',
-          path: '/fields/System.Description',
-          value: `Deploying the following solutions: ${selectedSolutions.map(s => s.name).join(', ')}`,
-        },
-      ];
+      };
 
-      // Specify the project name and work item type
-      const projectName = 'YourProjectName'; // Replace with your Azure DevOps project name
-      const workItemType = 'Task'; // Replace with the desired work item type
+      const createdWorkItem = await createWorkItem(workItem);
 
-      // Create the work item
-      // const createdWorkItem = await workItemClient.createWorkItem(
-      //   JSON.stringify(patchDocument), // Serialize the JSON Patch Document
-      //   projectName,
-      //   workItemType
-      // );
-
-      // alert(`Work item created successfully with ID: ${createdWorkItem.id}`);
+      alert(`Work item created successfully with ID: ${createdWorkItem.id}`);
     } catch (error) {
       console.error('Error creating work item:', error);
       alert('Failed to submit deployment request.');

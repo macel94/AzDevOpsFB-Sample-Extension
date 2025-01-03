@@ -1,0 +1,1 @@
+npx @openapitools/openapi-generator-cli generate -i https://raw.githubusercontent.com/MicrosoftDocs/vsts-rest-api-specs/refs/heads/master/specification/wit/7.2/workItemTracking.json -g typescript-fetch -o ./src/wit-client

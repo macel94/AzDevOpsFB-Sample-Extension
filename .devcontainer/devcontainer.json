@@ -8,7 +8,8 @@
 	"features": {
 		"ghcr.io/meaningful-ooo/devcontainer-features/homebrew:2": {
 			"shallowClone": true
-		}
+		},
+		"ghcr.io/devcontainers/features/java:1": {}
 	},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [
