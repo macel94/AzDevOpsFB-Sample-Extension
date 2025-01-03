@@ -9,10 +9,9 @@ In development mode, you can use Vite's fast refresh and other development featu
 ## Production Mode
 
 In production mode, the extension is optimized and ready for deployment to Azure DevOps.
-
 ## Devcontainer
 
-The project includes a devcontainer configuration with everything needed to get started. The only prerequisite is to install `mkcert` and generate local certificates. This can be done in WSL instead of inside the devcontainer.
+The project includes a devcontainer configuration with everything needed to get started.
 
 ### Steps to Generate Certificates
 

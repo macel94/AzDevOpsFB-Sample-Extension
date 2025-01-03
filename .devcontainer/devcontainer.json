@@ -5,7 +5,11 @@
 	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
 	"image": "mcr.microsoft.com/devcontainers/typescript-node:22-bookworm",
 	// Features to add to the dev container. More info: https://containers.dev/features.
-	// "features": {},
+	"features": {
+		"ghcr.io/meaningful-ooo/devcontainer-features/homebrew:2": {
+			"shallowClone": true
+		}
+	},
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	"forwardPorts": [
 		5173,
@@ -20,10 +24,14 @@
 		}
 	},
 	"mounts": [
-		"type=bind,source=/usr/local/share/ca-certificates,target=/usr/local/share/ca-certificates"
+		"type=bind,source=/usr/local/share/ca-certificates,target=/usr/local/share/ca-certificates",
+		"type=bind,source=${localEnv:HOME}/.local/share/mkcert,target=/home/node/.local/share/mkcert" 
 	],
-	// trust the node_modules/.vite/basic-ssl/_cert.pem certificate
-	"postCreateCommand": "yarn install && bash -c 'yarn global add tfx-cli' && sudo cp node_modules/.vite/basic-ssl/_cert.pem /usr/local/share/ca-certificates/_cert.crt && sudo update-ca-certificates"
+	"postCreateCommand": [
+		"/bin/sh",
+		"-c",
+		". ./.devcontainer/postCreate.sh > ./.devcontainer/oncreate.log"
+	]
 	// Configure tool-specific properties.
 	// "customizations": {},
 	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
