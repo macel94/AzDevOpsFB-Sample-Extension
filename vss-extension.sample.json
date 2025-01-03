@@ -15,7 +15,7 @@
     ],
     "content": {
         "details": {
-            "path": "overview.md"
+            "path": "src/Extension-Readme.md"
         }
     },
     "files": [
