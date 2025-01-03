@@ -9,7 +9,8 @@
     "lint": "eslint .",
     "preview": "vite preview",
     "publish-extension": "bash ./publish-extension.sh",
-    "publish-extension-dev": "tfx extension create --manifest-globs vss-extension.dev.json --rev-version"
+    "publish-extension-dev": "tfx extension create --manifest-globs vss-extension.dev.json --rev-version",
+    "regenerate-certificates": "rm rf certificates && mkdir certificates && mkcert -key-file ./certificates/key.pem -cert-file ./certificates/cert.pem 'localhost 127.0.0.1 ::1'"
   },
   "dependencies": {
     "azure-devops-extension-api": "^4.246.0",
@@ -19,9 +20,9 @@
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
+    "@types/node": "^22.10.5",
     "@types/react": "^18.3.18",
     "@types/react-dom": "^18.3.5",
-    "@vitejs/plugin-basic-ssl": "^1.2.0",
     "@vitejs/plugin-react": "^4.3.4",
     "eslint": "^9.17.0",
     "eslint-plugin-react-hooks": "^5.0.0",

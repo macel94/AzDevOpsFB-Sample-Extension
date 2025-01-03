@@ -25,3 +25,5 @@ dist-ssr
 *.vsix
 vss-extension.json
 vss-extension.dev.json
+certificates/cert.pem
+certificates/key.pem
